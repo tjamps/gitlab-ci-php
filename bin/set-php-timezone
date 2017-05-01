@@ -6,4 +6,13 @@ TIMEZONE=${1:-Europe/Paris}
 # Replace "/" with "\/" in TIMEZONE so that sed can eat it
 TIMEZONE=${TIMEZONE/\//\\\/}
 
-sed -i "s/date.timezone =.*/date.timezone = \"${TIMEZONE}\"/" /etc/php/7.0/cli/php.ini
+PHP_INI_FILE=$(php -i | grep "Loaded Configuration File" | awk '{ print $5; }')
+
+if [ ! -f ${PHP_INI_FILE} ]; then
+    >&2 echo 'ERROR: Cannot find php.ini file'
+    exit 1
+fi
+
+sed -i "s/date.timezone =.*/date.timezone = \"${TIMEZONE}\"/" ${PHP_INI_FILE}
+
+exit 0
