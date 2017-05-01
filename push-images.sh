@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TAGS="7.0"
+TAGS="7.0 7.1"
 
 docker login
 if [ $? -ne 0 ]; then

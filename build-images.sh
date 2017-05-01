@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-TAGS="7.0"
+TAGS="7.0 7.1"
 
 for tag in ${TAGS};
 do
