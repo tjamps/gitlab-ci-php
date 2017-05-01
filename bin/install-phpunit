@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# See https://phpunit.de/manual/current/en/installation.html#installation.phar.verification
+
+VERSION=${1:-6.1}
+
+gpg --batch --quiet --fingerprint D8406D0D82947747293778314AA394086372C20A > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    gpg --batch --quiet --recv-keys D8406D0D82947747293778314AA394086372C20A > /dev/null 2>&1
+    gpg --batch --quiet --fingerprint D8406D0D82947747293778314AA394086372C20A > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        >&2 echo 'ERROR: Could not download PGP public key for verification'
+        exit 1
+    fi
+fi
+
+wget -q -O phpunit-${VERSION}.phar https://phar.phpunit.de/phpunit-${VERSION}.phar
+wget -q -O phpunit-${VERSION}.phar.asc https://phar.phpunit.de/phpunit-${VERSION}.phar.asc
+
+gpg --batch --quiet --verify phpunit-${VERSION}.phar.asc phpunit-${VERSION}.phar > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    >&2 echo 'ERROR: Invalid signature'
+    exit 1
+fi
+
+mv phpunit-${VERSION}.phar /usr/local/bin/phpunit
+chmod a+x /usr/local/bin/phpunit
+rm phpunit-${VERSION}.phar.asc
+
+exit 0

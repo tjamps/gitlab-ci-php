@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Set default timezone
+TIMEZONE=${1:-Europe/Paris}
+
+# Replace "/" with "\/" in TIMEZONE so that sed can eat it
+TIMEZONE=${TIMEZONE/\//\\\/}
+
+sed -i "s/date.timezone =.*/date.timezone = \"${TIMEZONE}\"/" /etc/php/7.0/cli/php.ini
